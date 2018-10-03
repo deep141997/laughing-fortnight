@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Sep 26 15:32:39 2018
+
+@author: deepak
+"""
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+pokemon_data=pd.read_csv("/home/deepak/Downloads/Pokemon.csv")
+print(pokemon_data[50:100]) # for 50-100
+print(pokemon_data.columns)  # for columns
+print(pokemon_data[50:100]['Type 1'])  # for specific columns
+pokemon=pokemon_data.drop(['Type 2'],axis=1)
+print(pokemon)
+print(pokemon.columns) #droping type 2 column
+""" defense data show """
+group_by_defence=pokemon[pokemon['Defense']>105].groupby('Type 1') #grouping of data defnse is greater than 105 and group by Type 1
+defense_data=group_by_defence.count()['Name'].sort_values(ascending=False)
+print(type(defense_data)) #<class 'pandas.core.series.Series'>
+i=range(len(defense_data))
+plt.bar(i,defense_data.data,color="blue",edgecolor="red")
+plt.xticks(i,defense_data.index,rotation='90')
+plt.show()
+
+""" attack data show in bar"""
+
+group_by_attack=pokemon[pokemon['Attack']>100].groupby('Type 1') # grouping of data attack is greater than 100 and groupby type1
+attack_data=group_by_attack.count()['Name'].sort_values(ascending=False)
+print(type(attack_data))
+j=range(len(attack_data))
+plt.bar(j,attack_data.data,color="green",edgecolor="red")
+plt.xticks(j,attack_data.index,rotation='90')
+plt.show()
+""" speed data show in bar"""
+group_by_speed=pokemon[pokemon['Speed']>100].groupby('Type 1')
+speed_data=group_by_speed.count()['Name'].sort_values(ascending=False)
+k=range(len(speed_data))
+plt.bar(k,speed_data.data,color="violet",edgecolor="black")
+plt.xticks(k,speed_data.index,rotation='90')
+plt.show()
+
+""" correlation b/w attack vs speed"""
+sns.regplot(x=pokemon['Attack'],y=pokemon['Speed'],data=pokemon)
+plt.title('attack vs speed')
+plt.show()
+
+print(pokemon.columns)
+""" correlation b/w speed vs defense"""
+sns.regplot(x=pokemon['Attack'],y=pokemon['Defense'],data=pokemon)
+plt.title('attack vs defense')
+plt.show()
+
+"""correlation of data"""
+print(pokemon.corr())
+f,ax=plt.subplots(figsize=(10,10))
+sns.heatmap(pokemon.corr(),annot=True,linewidth=.9,ax=ax)
+plt.show()
